@@ -1,19 +1,22 @@
 const { client, getAllUsers, createUser } = require('./index');
 
 async function dropTables() {
+   console.log('Starting to drop tables...');
    try {
       await client.query(`
 DROP TABLE IF EXISTS users;
       `);
+      console.log('Finished dropping tables!');
    } catch (error) {
-      throw error; // we pass the error up to the function that calls dropTables
+      console.log('Error dropping tables!');
+      throw error;
    }
 }
 
-// this function should call a query which creates all tables for our database
 async function createTables() {
    try {
       console.log('Starting to build tables...');
+
       await client.query(`
       CREATE TABLE users (
         id SERIAL PRIMARY KEY,
@@ -24,7 +27,7 @@ async function createTables() {
       console.log('Finished building tables!');
    } catch (error) {
       console.error('Error building tables!');
-      throw error; // we pass the error up to the function that calls createTables
+      throw error;
    }
 }
 
