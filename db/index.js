@@ -85,17 +85,14 @@ async function updateUser(id, fields = {}) {
    }
 }
 async function updatePost(postId, fields = {}) {
-   // read off the tags & remove that field
-   const { tags } = fields; // might be undefined
+   const { tags } = fields;
    delete fields.tags;
 
-   // build the set string
    const setString = Object.keys(fields)
       .map((key, index) => `"${key}"=$${index + 1}`)
       .join(', ');
 
    try {
-      // update any fields that need to be updated
       if (setString.length > 0) {
          await client.query(
             `
@@ -108,16 +105,13 @@ async function updatePost(postId, fields = {}) {
          );
       }
 
-      // return early if there's no tags to update
       if (tags === undefined) {
          return await getPostById(postId);
       }
 
-      // make any new tags that need to be made
       const tagList = await createTags(tags);
       const tagListIdString = tagList.map((tag) => `${tag.id}`).join(', ');
 
-      // delete any post_tags from the database which aren't in that tagList
       await client.query(
          `
        DELETE FROM post_tags
@@ -128,7 +122,6 @@ async function updatePost(postId, fields = {}) {
          [postId]
       );
 
-      // and create post_tags as necessary
       await addTagsToPost(postId, tagList);
 
       return await getPostById(postId);
