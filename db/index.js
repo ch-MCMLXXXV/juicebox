@@ -31,12 +31,7 @@ async function createUser({ username, password, name, location }) {
       throw error;
    }
 }
-async function createPost({
-   authorId,
-   title,
-   content,
-   tags = [], // this is new
-}) {
+async function createPost({ authorId, title, content, tags = [] }) {
    try {
       const {
          rows: [post],
